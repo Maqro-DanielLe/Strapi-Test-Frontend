@@ -1,26 +1,23 @@
-'use client'
-
 import Blog from '@/components/Blog'
-import useFetch from '@/hooks/useFetch'
-import Image from 'next/image'
 
-const API_BASE = 'http://localhost:1337/api'
+const fetchData = async () => {
+    const res = await fetch('http://127.0.0.1:1337/api/blog-posts/3')
+    
+    if(!res.ok) {
+        throw new Error('Failed to fetch data')
+    }
 
-export default function Home() {
-    const {loading, error, data}: {loading: any, error: any, data: any} = useFetch(`${API_BASE}/blog-posts/1`)
+    return res.json()
+}
 
-    if(loading) return <p>Loading</p>
-    if(error) return <p>Errorrr {':('}</p>
-
-    const post = data.data.attributes
-    console.log(post)
+export default async function Home() {
+    let strapiData = await fetchData()
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
-            <Blog/>
+            <Blog />
             <div>
-                <h2>{post.title}</h2>
-                <p>{post.body}</p>
+                {strapiData.data.attributes.title}
             </div>
         </main>
     )

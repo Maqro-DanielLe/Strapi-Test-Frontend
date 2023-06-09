@@ -3,6 +3,7 @@ const nextConfig = {
     images: {
         domains: [
             'sneakernews.com',
+            'images.unsplash.com',
         ]
     }
 }

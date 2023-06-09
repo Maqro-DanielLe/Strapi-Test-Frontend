@@ -6,15 +6,16 @@ import useFetch from '@/hooks/useFetch'
 import Image from 'next/image'
 
 
-export default function SingleBlog() {
-    const route = usePathname()
-    const {loading, error, data}: {loading: any, error: any, data: any} = useFetch(`http://localhost:1337/api/blog-posts${route}`)
+export default async function SingleBlog({id}: {id: any}) {
 
-    if (loading) return <div>Loading...</div>
-    if (error) return <div>Errorrr {':('}</div>
-    
-    const post = data.data.attributes
-    console.log(post)
+    console.log(id)
+
+    const res = await fetch(`http://localhost:1337/api/blog-posts${id}`)
+    const data: any = res.json()
+
+    console.log(data)
+
+    const post: any = data.data.attributes
 
     return (
         <div className='text-black'>

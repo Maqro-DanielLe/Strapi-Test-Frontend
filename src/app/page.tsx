@@ -1,4 +1,6 @@
 import Blog from '@/components/Blog'
+import Hero from '@/components/Hero'
+import { LandingPageData } from '@/data/HeroData'
 
 const fetchData = async () => {
     const res = await fetch('http://127.0.0.1:1337/api/blog-posts/3')
@@ -15,10 +17,7 @@ export default async function Home() {
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
-            <Blog />
-            <div>
-                {strapiData.data.attributes.title}
-            </div>
+            <Hero heading='Shh Shoe Store' heroData={LandingPageData}/>
         </main>
     )
 }

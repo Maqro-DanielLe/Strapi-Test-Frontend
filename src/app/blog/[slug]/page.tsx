@@ -1,19 +1,10 @@
-'use client'
-
 import React from 'react'
-import { usePathname } from 'next/navigation'
-import useFetch from '@/hooks/useFetch'
 import Image from 'next/image'
 
 
-export default async function SingleBlog({id}: {id: any}) {
-
-    console.log(id)
-
-    const res = await fetch(`http://localhost:1337/api/blog-posts${id}`)
-    const data: any = res.json()
-
-    console.log(data)
+export default async function SingleBlog({params}:any) {
+    const res = await fetch(`http://127.0.0.1:1337/api/blog-posts/${params.slug}`)
+    const data: any = await res.json()
 
     const post: any = data.data.attributes
 

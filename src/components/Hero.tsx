@@ -5,9 +5,12 @@ import { Splide, SplideSlide, Options } from '@splidejs/react-splide'
 import '@splidejs/splide/css'
 import Image from 'next/image'
 import { HeroData } from '@/data/HeroData'
+import { API_BASE } from '@/data/StrapiData'
 
 const MEDIUM_DEVICE_WIDTH = 768;    // 768px or below -> medium device
 const MINI_DEVICE_WIDTH = 480;      // 480px or below -> mini device
+
+
 
 const calcCarouselHeight = (width: number): string => {
     if (width < MINI_DEVICE_WIDTH) 
@@ -18,8 +21,17 @@ const calcCarouselHeight = (width: number): string => {
             return '4rem'
 }
 
-const Hero = ({heading, heroData}: {heading: string, heroData: HeroData}) => {
+
+
+const Hero = () => {
     const [carouselHeight, setCarouselHeight] = useState('6rem')
+    const [data, setData]: [any, any] = useState() 
+
+    const fetchHeroData = (uri: string) => {
+        fetch(uri)
+        .then( (res) => res.json() )
+        .then( (data) => { setData(data) })
+    }
 
     useEffect(() => {
         setCarouselHeight( calcCarouselHeight(window.innerWidth) )
@@ -28,15 +40,20 @@ const Hero = ({heading, heroData}: {heading: string, heroData: HeroData}) => {
         })
     })
 
+    // Retrieve Data
+    fetchHeroData('http://127.0.0.1:1337/api/hero?populate=*')
+    if(!data) return <section>Loading</section>
+    const heroData = data.data.attributes
+
     return (
         <section id='hero' className='flex justify-center pt-36'>
                 {/* Content */}
                 <div className='flex flex-col items-center z-[3] md:pb-20 sm:pb-10 pb-5 max-w-7xl md:px-24 sm:px-12'>
                     {/* Title */}
-                    <h1 className='text-6xl font-extrabold text-center'>{heading}</h1>
+                    <h1 className='text-6xl font-extrabold text-center'>{heroData.title}</h1>
                     
                     {/* Pun Carousel */}
-                    <Splide 
+                    <Splide
                         className='mt-3 mb-3 mx-5 text-center' 
                         role='group' 
                         options={{
@@ -50,9 +67,9 @@ const Hero = ({heading, heroData}: {heading: string, heroData: HeroData}) => {
                             }
                         }} 
                         aria-label='Pun Carousel'
-                        >{heroData.data.map( (pun: string, index: number) => (
-                            <SplideSlide key={index}>
-                                <p className='text-xl'>{pun}</p>    
+                        >{heroData.carouselText.map( (pun: {id: number, content: string}) => (
+                            <SplideSlide key={pun.id}>
+                                <p className='text-xl'>{pun.content}</p>    
                             </SplideSlide>
                         ))}
                     </Splide>
@@ -70,7 +87,7 @@ const Hero = ({heading, heroData}: {heading: string, heroData: HeroData}) => {
                         
                     <Image 
                         className='max-w-[7xl] w-[100%] my-8'
-                        src={heroData.image} 
+                        src={`http://127.0.0.1:1337${heroData.image.data.attributes.url}`} 
                         alt='Orange Nike Air Max Shoes' 
                         width={1470} 
                         height={900}/>

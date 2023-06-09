@@ -4,6 +4,7 @@ const nextConfig = {
         domains: [
             'sneakernews.com',
             'images.unsplash.com',
+            '127.0.0.1',
         ]
     }
 }
